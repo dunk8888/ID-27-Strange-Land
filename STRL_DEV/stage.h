@@ -18,41 +18,22 @@ extern SimpleButtons buttons;
 int counterX = 0;
 int counterY = 0;
 
-///*
-void drawBackground()
+void newDraw(unsigned posX, unsigned posY)
 {
-  int colMin = -(counterX / 8);
-  int colMax = colMin + 16;
-  int rowMin = -(counterY / 8);
-  int rowMax = rowMin + 8;
-
-  for (byte arrayX = 0; arrayX < 4; arrayX++)
+  unsigned int intX = posX >> 3, subX = posX & 0x07;
+  unsigned int intY = posY >> 3, subY = posY & 0x07;
+  for(byte x = 0; x < (subX ? 17 : 16); x++)
   {
-    if ((colMin > -1 + (16 * arrayX)) && (colMin < 16 + (16 * arrayX)))
+    for(byte y = 0; y < (subY ?  9 :  8); y++)
     {
-      for (byte nextCol = 0; nextCol < 2; nextCol++)
-      {
-        for (byte col = (1 - nextCol) * (colMin - (16 * arrayX)); col < (16 * (1 - nextCol)) + (nextCol * (colMax - (15 + (16 * arrayX)))); col++)
-        {
-          for (byte arrayY = 0; arrayY < 4; arrayY++)
-          {
-            if ((rowMin > -1 + (8 * arrayY)) && (rowMin < 8 + (8 * arrayY)))
-            {
-              for (byte nextRow = 0; nextRow < 2; nextRow++)
-              {
-                for (byte row = (1 - nextRow) * (rowMin - (8 * arrayY)); row <  (8 * (1 - nextRow)) + (nextRow * (rowMax - (7 + (8 * arrayY)))); row++)
-                {
-                  arduboy.drawSprite((col * 8) + (128 * (arrayX + nextCol)) + counterX, (row * 8) + (64 * (arrayY + nextRow)) + counterY, tilesheet_bitmap, 8, 8, pgm_read_byte(&tilemaps[((arrayY + nextRow) * 4) + (arrayX + nextCol)][((row * 16) + col)]), WHITE);
-                }
-              }
-            }
-          }
-        }
-      }
+      arduboy.drawSprite(((int)x << 3) - subX, ((int)y << 3) - subY, tilesheet_bitmap, 8, 8, pgm_read_byte(&tilemaps[(((intX + x) >> 3) + ((intY + y) & 0xF8)) >> 1][((intX + x) & 0x0F) + (((intY + y) & 0x07) << 4)]),WHITE);
     }
   }
 }
 
+void drawBackground() {
+  newDraw(-counterX, -counterY);
+}
 
 void checkFloor() {
   //check Down
