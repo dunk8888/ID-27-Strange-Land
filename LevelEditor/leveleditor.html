@@ -1,0 +1,785 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<style type="text/css">
+		table{
+			border-collapse:collapse;
+			margin:0 auto;
+		}
+		.gridOn{
+			border:1px solid green;
+			padding: 0;
+		}
+		.gridOff{
+			border:0;
+			padding: 0;
+			position: relative;
+		}
+		img{
+			display: block;
+		}
+		button{
+			border:1px solid #000000;
+			background-color:#2e456e;
+			color:#ffffff;
+			margin:0 auto;
+			font-size: 1.5em;
+		}
+		div{
+			width:528px;
+			margin:0 auto;
+			text-align: center;
+		}
+		textarea{
+			width:528px;
+			height:112px
+		}
+		.big img{
+			width: 32px;
+			height:32px;
+			image-rendering: -moz-crisp-edges;
+		}
+		#errors{
+			width: 50%;
+			margin: 0 auto;
+		}
+		#smallMap{
+			width: 20%;
+			margin: 0 auto;
+			text-align: center;
+		}
+	</style>
+	<script>
+		var pos1 = [0, 1, 5, 9, 13, 14, 15, 19];
+		var pos2 = [0, 2, 6, 10, 13, 14, 16, 20];
+		var pos3 = [0, 3, 7, 11, 13, 14, 17, 21];
+		var pos4 = [0, 4, 8, 12, 13, 14, 18, 22];
+		function nextImage(img, pos){
+			
+			var imgNum = img.src.substring(img.src.length - 6, img.src.length - 4);
+			for(var i = 0; i < 8; i++){
+				if(imgNum == pos1[i] && pos === 1){
+					if(pos1[(i+1)%8] < 10){
+						img.src = "images/tile0"+pos1[(i+1)%8]+".png";
+					}
+					else{
+						img.src = "images/tile"+pos1[(i+1)%8]+".png";
+					}
+				}
+				if(imgNum == pos2[i] && pos === 2){
+					if(pos2[(i+1)%8] < 10){
+						img.src = "images/tile0"+pos2[(i+1)%8]+".png";
+					}
+					else{
+						img.src = "images/tile"+pos2[(i+1)%8]+".png";
+					}
+				}
+				if(imgNum == pos3[i] && pos === 3){
+					if(pos3[(i+1)%8] < 10){
+						img.src = "images/tile0"+pos3[(i+1)%8]+".png";
+					}
+					else{
+						img.src = "images/tile"+pos3[(i+1)%8]+".png";
+					}
+				}
+				if(imgNum == pos4[i] && pos === 4){
+					if(pos4[(i+1)%8] < 10){
+						img.src = "images/tile0"+pos4[(i+1)%8]+".png";
+					}
+					else{
+						img.src = "images/tile"+pos4[(i+1)%8]+".png";
+					}
+				}
+			}
+		}
+		
+		function switchGrid(){
+			for(var k = 0; k < 128; k++){
+				var grid = document.getElementsByTagName('td')[k];
+				if(grid.className !== "gridOff"){
+					grid.className = "gridOff";
+				}
+				else{
+					grid.className = "gridOn";
+				}
+			}
+		}
+
+		function uploadMap(){
+			var arr = document.getElementById('txt').value.split(",");
+			var position;
+			var red = 255;
+			for(var y = 0; y < 128; y++){
+				if(y < 16){position = (y % 2)+1;}
+				if(y > 15 && y < 32){position = (y % 2)+3;}
+				if(y > 31 && y < 48){position = (y % 2)+1;}
+				if(y > 47 && y < 64){position = (y % 2)+3;}
+				if(y > 63 && y < 80){position = (y % 2)+1;}
+				if(y > 79 && y < 96){position = (y % 2)+3;}
+				if(y > 95 && y < 112){position = (y % 2)+1;}
+				if(y > 111 && y < 128){position = (y % 2)+3;}
+				if(y > 127 && y < 144){position = (y % 2)+1;}
+				if(y > 143 && y < 160){position = (y % 2)+3;}
+
+				arr[y] = arr[y].replace(/\s+/g, "");
+
+				if(position === 1){
+					if(arr[y] == pos1[0] || arr[y] == pos1[1] || arr[y] == pos1[2] || arr[y] == pos1[3] || arr[y] == pos1[4] || arr[y] == pos1[5] || arr[y] == pos1[6] || arr[y] == pos1[7]){
+						if(arr[y].length === 1){arr[y] = "0"+arr[y];}
+						document.getElementsByTagName('img')[y].src = "images/tile"+arr[y]+".png";
+						document.getElementsByTagName('img')[y].style.visibility = "visible";
+					}
+					else{
+						var p = document.createElement('p');
+						p.style.color = "rgb("+red+",0,0)";
+						p.innerHTML = "Het getal "+arr[y]+" zit niet in de reeks "+pos1[0]+", "+pos1[1]+", "+pos1[2]+", "+pos1[3]+", "+pos1[4]+", "+pos1[5]+"!";
+						document.getElementById('errors').appendChild(p);
+						document.getElementsByTagName('img')[y].style.visibility = "hidden";
+						document.getElementsByTagName('td')[y].style.backgroundColor = "rgb("+red+",0,0)";
+						red-=20;
+						if(red <= 35){red = 255;}
+					}
+				}
+
+				if(position === 2){
+					if(arr[y] == pos2[0] || arr[y] == pos2[1] || arr[y] == pos2[2] || arr[y] == pos2[3] || arr[y] == pos2[4] || arr[y] == pos2[5] || arr[y] == pos2[6] || arr[y] == pos2[7]){
+						if(arr[y].length === 1){arr[y] = "0"+arr[y];}
+						document.getElementsByTagName('img')[y].src = "images/tile"+arr[y]+".png";
+						document.getElementsByTagName('img')[y].style.visibility = "visible";
+					}
+					else{
+						var p = document.createElement('p');
+						p.style.color = "rgb("+red+",0,0)";
+						p.innerHTML = "Het getal "+arr[y]+" zit niet in de reeks "+pos1[0]+", "+pos1[1]+", "+pos1[2]+", "+pos1[3]+", "+pos1[4]+", "+pos1[5]+"!";
+						document.getElementById('errors').appendChild(p);
+						document.getElementsByTagName('img')[y].style.visibility = "hidden";
+						document.getElementsByTagName('td')[y].style.backgroundColor = "rgb("+red+",0,0)";
+						red-=20;
+						if(red <= 35){red = 255;}
+					}
+				}
+
+				if(position === 3){
+					if(arr[y] == pos3[0] || arr[y] == pos3[1] || arr[y] == pos3[2] || arr[y] == pos3[3] || arr[y] == pos3[4] || arr[y] == pos3[5] || arr[y] == pos3[6] || arr[y] == pos3[7]){
+						if(arr[y].length === 1){arr[y] = "0"+arr[y];}
+						document.getElementsByTagName('img')[y].src = "images/tile"+arr[y]+".png";
+						document.getElementsByTagName('img')[y].style.visibility = "visible";
+					}
+					else{
+						var p = document.createElement('p');
+						p.style.color = "rgb("+red+",0,0)";
+						p.innerHTML = "Het getal "+arr[y]+" zit niet in de reeks "+pos1[0]+", "+pos1[1]+", "+pos1[2]+", "+pos1[3]+", "+pos1[4]+", "+pos1[5]+"!";
+						document.getElementById('errors').appendChild(p);
+						document.getElementsByTagName('img')[y].style.visibility = "hidden";
+						document.getElementsByTagName('td')[y].style.backgroundColor = "rgb("+red+",0,0)";
+						red-=20;
+						if(red <= 35){red = 255;}
+					}
+				}
+
+				if(position === 4){
+					if(arr[y] == pos4[0] || arr[y] == pos4[1] || arr[y] == pos4[2] || arr[y] == pos4[3] || arr[y] == pos4[4] || arr[y] == pos4[5] || arr[y] == pos4[6] || arr[y] == pos4[7]){
+						if(arr[y].length === 1){arr[y] = "0"+arr[y];}
+						document.getElementsByTagName('img')[y].src = "images/tile"+arr[y]+".png";
+						document.getElementsByTagName('img')[y].style.visibility = "visible";
+					}
+					else{
+						var p = document.createElement('p');
+						p.style.color = "rgb("+red+",0,0)";
+						p.innerHTML = "Het getal "+arr[y]+" zit niet in de reeks "+pos1[0]+", "+pos1[1]+", "+pos1[2]+", "+pos1[3]+", "+pos1[4]+", "+pos1[5]+"!";
+						document.getElementById('errors').appendChild(p);
+						document.getElementsByTagName('img')[y].style.visibility = "hidden";
+						document.getElementsByTagName('td')[y].style.backgroundColor = "rgb("+red+",0,0)";
+						red-=20;
+						if(red <= 35){red = 255;}
+					}
+				}
+			}
+			draw();
+		}
+		function clearErrors(){
+			for(var err = 0; err < document.getElementsByTagName('p').length; err++){
+				//document.getElementsByTagName('p')[err].parentNode.removeChild(document.getElementsByTagName('p')[err]);
+				document.getElementById('errors').innerHTML = "";
+			}
+		}
+		
+		function downloadCanvas(link, canvasId, filename) {
+		    link.href = document.getElementById(canvasId).toDataURL();
+		    link.download = filename;
+		}
+	</script>
+</head>
+<body>
+	<br><br>
+	<table class="big">
+		<tr>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile15.png" onclick="nextImage(this,1);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile16.png" onclick="nextImage(this,2);getNumbers();draw();"></td>
+		</tr>
+		<tr>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile17.png" onclick="nextImage(this,3);getNumbers();draw();"></td>
+			<td class="gridOn"><img src="images/tile18.png" onclick="nextImage(this,4);getNumbers();draw();"></td>
+		</tr>
+	</table>
+	<br><br>
+	<div>
+		<textarea id="txt"></textarea>
+		<br><br><br>
+	<button onclick="switchGrid();">GRID ON/OFF</button>
+	<br><br>
+	<button onclick="clearErrors();uploadMap();">UPLOAD</button>
+	</div>
+	<br><br><br>
+	<script>
+		function getNumbers(){
+			document.getElementById('txt').value = "";
+			for(var j = 0; j < 128; j++){
+				var imgNr = document.getElementsByTagName('img')[j].src.substring(document.getElementsByTagName('img')[j].src.length-6, 	document.getElementsByTagName('img')[j].src.length-4);
+				if(j%16 === 0 && j !== 0){document.getElementById('txt').value += "\n";}
+				if(imgNr.substring(0,1) == "0"){imgNr = " "+imgNr.substring(1,2);}
+				document.getElementById('txt').value += imgNr+", ";
+			}
+		}
+		getNumbers();
+	</script>
+	<div id="smallMap">
+		<canvas id="canvas" width="128" height="64">
+		</canvas>
+		<br><br><br>
+		<a onclick="downloadCanvas(this, 'canvas', 'map.png');"><button>DOWNLOAD IMAGE</button></a>
+	</div>
+	<br><br>
+	<div id="errors">
+	</div>
+	<br><br>
+	<script>
+		function draw(){
+			ctx = document.getElementById('canvas').getContext('2d');
+
+			var img000 = new Image();
+			var img001 = new Image();
+			var img002 = new Image();
+			var img003 = new Image();
+			var img004 = new Image();
+			var img005 = new Image();
+			var img006 = new Image();
+			var img007 = new Image();
+			var img008 = new Image();
+			var img009 = new Image();
+			var img010 = new Image();
+			var img011 = new Image();
+			var img012 = new Image();
+			var img013 = new Image();
+			var img014 = new Image();
+			var img015 = new Image();
+			var img016 = new Image();
+			var img017 = new Image();
+			var img018 = new Image();
+			var img019 = new Image();
+			var img020 = new Image();
+			var img021 = new Image();
+			var img022 = new Image();
+			var img023 = new Image();
+			var img024 = new Image();
+			var img025 = new Image();
+			var img026 = new Image();
+			var img027 = new Image();
+			var img028 = new Image();
+			var img029 = new Image();
+			var img030 = new Image();
+			var img031 = new Image();
+			var img032 = new Image();
+			var img033 = new Image();
+			var img034 = new Image();
+			var img035 = new Image();
+			var img036 = new Image();
+			var img037 = new Image();
+			var img038 = new Image();
+			var img039 = new Image();
+			var img040 = new Image();
+			var img041 = new Image();
+			var img042 = new Image();
+			var img043 = new Image();
+			var img044 = new Image();
+			var img045 = new Image();
+			var img046 = new Image();
+			var img047 = new Image();
+			var img048 = new Image();
+			var img049 = new Image();
+			var img050 = new Image();
+			var img051 = new Image();
+			var img052 = new Image();
+			var img053 = new Image();
+			var img054 = new Image();
+			var img055 = new Image();
+			var img056 = new Image();
+			var img057 = new Image();
+			var img058 = new Image();
+			var img059 = new Image();
+			var img060 = new Image();
+			var img061 = new Image();
+			var img062 = new Image();
+			var img063 = new Image();
+			var img064 = new Image();
+			var img065 = new Image();
+			var img066 = new Image();
+			var img067 = new Image();
+			var img068 = new Image();
+			var img069 = new Image();
+			var img070 = new Image();
+			var img071 = new Image();
+			var img072 = new Image();
+			var img073 = new Image();
+			var img074 = new Image();
+			var img075 = new Image();
+			var img076 = new Image();
+			var img077 = new Image();
+			var img078 = new Image();
+			var img079 = new Image();
+			var img080 = new Image();
+			var img081 = new Image();
+			var img082 = new Image();
+			var img083 = new Image();
+			var img084 = new Image();
+			var img085 = new Image();
+			var img086 = new Image();
+			var img087 = new Image();
+			var img088 = new Image();
+			var img089 = new Image();
+			var img090 = new Image();
+			var img091 = new Image();
+			var img092 = new Image();
+			var img093 = new Image();
+			var img094 = new Image();
+			var img095 = new Image();
+			var img096 = new Image();
+			var img097 = new Image();
+			var img098 = new Image();
+			var img099 = new Image();
+			var img100 = new Image();
+			var img101 = new Image();
+			var img102 = new Image();
+			var img103 = new Image();
+			var img104 = new Image();
+			var img105 = new Image();
+			var img106 = new Image();
+			var img107 = new Image();
+			var img108 = new Image();
+			var img109 = new Image();
+			var img110 = new Image();
+			var img111 = new Image();
+			var img112 = new Image();
+			var img113 = new Image();
+			var img114 = new Image();
+			var img115 = new Image();
+			var img116 = new Image();
+			var img117 = new Image();
+			var img118 = new Image();
+			var img119 = new Image();
+			var img120 = new Image();
+			var img121 = new Image();
+			var img122 = new Image();
+			var img123 = new Image();
+			var img124 = new Image();
+			var img125 = new Image();
+			var img126 = new Image();
+			var img127 = new Image();
+			img000.src = document.getElementsByTagName('img')[0].src;
+			img001.src = document.getElementsByTagName('img')[1].src;
+			img002.src = document.getElementsByTagName('img')[2].src;
+			img003.src = document.getElementsByTagName('img')[3].src;
+			img004.src = document.getElementsByTagName('img')[4].src;
+			img005.src = document.getElementsByTagName('img')[5].src;
+			img006.src = document.getElementsByTagName('img')[6].src;
+			img007.src = document.getElementsByTagName('img')[7].src;
+			img008.src = document.getElementsByTagName('img')[8].src;
+			img009.src = document.getElementsByTagName('img')[9].src;
+			img010.src = document.getElementsByTagName('img')[10].src;
+			img011.src = document.getElementsByTagName('img')[11].src;
+			img012.src = document.getElementsByTagName('img')[12].src;
+			img013.src = document.getElementsByTagName('img')[13].src;
+			img014.src = document.getElementsByTagName('img')[14].src;
+			img015.src = document.getElementsByTagName('img')[15].src;
+			img016.src = document.getElementsByTagName('img')[16].src;
+			img017.src = document.getElementsByTagName('img')[17].src;
+			img018.src = document.getElementsByTagName('img')[18].src;
+			img019.src = document.getElementsByTagName('img')[19].src;
+			img020.src = document.getElementsByTagName('img')[20].src;
+			img021.src = document.getElementsByTagName('img')[21].src;
+			img022.src = document.getElementsByTagName('img')[22].src;
+			img023.src = document.getElementsByTagName('img')[23].src;
+			img024.src = document.getElementsByTagName('img')[24].src;
+			img025.src = document.getElementsByTagName('img')[25].src;
+			img026.src = document.getElementsByTagName('img')[26].src;
+			img027.src = document.getElementsByTagName('img')[27].src;
+			img028.src = document.getElementsByTagName('img')[28].src;
+			img029.src = document.getElementsByTagName('img')[29].src;
+			img030.src = document.getElementsByTagName('img')[30].src;
+			img031.src = document.getElementsByTagName('img')[31].src;
+			img032.src = document.getElementsByTagName('img')[32].src;
+			img033.src = document.getElementsByTagName('img')[33].src;
+			img034.src = document.getElementsByTagName('img')[34].src;
+			img035.src = document.getElementsByTagName('img')[35].src;
+			img036.src = document.getElementsByTagName('img')[36].src;
+			img037.src = document.getElementsByTagName('img')[37].src;
+			img038.src = document.getElementsByTagName('img')[38].src;
+			img039.src = document.getElementsByTagName('img')[39].src;
+			img040.src = document.getElementsByTagName('img')[40].src;
+			img041.src = document.getElementsByTagName('img')[41].src;
+			img042.src = document.getElementsByTagName('img')[42].src;
+			img043.src = document.getElementsByTagName('img')[43].src;
+			img044.src = document.getElementsByTagName('img')[44].src;
+			img045.src = document.getElementsByTagName('img')[45].src;
+			img046.src = document.getElementsByTagName('img')[46].src;
+			img047.src = document.getElementsByTagName('img')[47].src;
+			img048.src = document.getElementsByTagName('img')[48].src;
+			img049.src = document.getElementsByTagName('img')[49].src;
+			img050.src = document.getElementsByTagName('img')[50].src;
+			img051.src = document.getElementsByTagName('img')[51].src;
+			img052.src = document.getElementsByTagName('img')[52].src;
+			img053.src = document.getElementsByTagName('img')[53].src;
+			img054.src = document.getElementsByTagName('img')[54].src;
+			img055.src = document.getElementsByTagName('img')[55].src;
+			img056.src = document.getElementsByTagName('img')[56].src;
+			img057.src = document.getElementsByTagName('img')[57].src;
+			img058.src = document.getElementsByTagName('img')[58].src;
+			img059.src = document.getElementsByTagName('img')[59].src;
+			img060.src = document.getElementsByTagName('img')[60].src;
+			img061.src = document.getElementsByTagName('img')[61].src;
+			img062.src = document.getElementsByTagName('img')[62].src;
+			img063.src = document.getElementsByTagName('img')[63].src;
+			img064.src = document.getElementsByTagName('img')[64].src;
+			img065.src = document.getElementsByTagName('img')[65].src;
+			img066.src = document.getElementsByTagName('img')[66].src;
+			img067.src = document.getElementsByTagName('img')[67].src;
+			img068.src = document.getElementsByTagName('img')[68].src;
+			img069.src = document.getElementsByTagName('img')[69].src;
+			img070.src = document.getElementsByTagName('img')[70].src;
+			img071.src = document.getElementsByTagName('img')[71].src;
+			img072.src = document.getElementsByTagName('img')[72].src;
+			img073.src = document.getElementsByTagName('img')[73].src;
+			img074.src = document.getElementsByTagName('img')[74].src;
+			img075.src = document.getElementsByTagName('img')[75].src;
+			img076.src = document.getElementsByTagName('img')[76].src;
+			img077.src = document.getElementsByTagName('img')[77].src;
+			img078.src = document.getElementsByTagName('img')[78].src;
+			img079.src = document.getElementsByTagName('img')[79].src;
+			img080.src = document.getElementsByTagName('img')[80].src;
+			img081.src = document.getElementsByTagName('img')[81].src;
+			img082.src = document.getElementsByTagName('img')[82].src;
+			img083.src = document.getElementsByTagName('img')[83].src;
+			img084.src = document.getElementsByTagName('img')[84].src;
+			img085.src = document.getElementsByTagName('img')[85].src;
+			img086.src = document.getElementsByTagName('img')[86].src;
+			img087.src = document.getElementsByTagName('img')[87].src;
+			img088.src = document.getElementsByTagName('img')[88].src;
+			img089.src = document.getElementsByTagName('img')[89].src;
+			img090.src = document.getElementsByTagName('img')[90].src;
+			img091.src = document.getElementsByTagName('img')[91].src;
+			img092.src = document.getElementsByTagName('img')[92].src;
+			img093.src = document.getElementsByTagName('img')[93].src;
+			img094.src = document.getElementsByTagName('img')[94].src;
+			img095.src = document.getElementsByTagName('img')[95].src;
+			img096.src = document.getElementsByTagName('img')[96].src;
+			img097.src = document.getElementsByTagName('img')[97].src;
+			img098.src = document.getElementsByTagName('img')[98].src;
+			img099.src = document.getElementsByTagName('img')[99].src;
+			img100.src = document.getElementsByTagName('img')[100].src;
+			img101.src = document.getElementsByTagName('img')[101].src;
+			img102.src = document.getElementsByTagName('img')[102].src;
+			img103.src = document.getElementsByTagName('img')[103].src;
+			img104.src = document.getElementsByTagName('img')[104].src;
+			img105.src = document.getElementsByTagName('img')[105].src;
+			img106.src = document.getElementsByTagName('img')[106].src;
+			img107.src = document.getElementsByTagName('img')[107].src;
+			img108.src = document.getElementsByTagName('img')[108].src;
+			img109.src = document.getElementsByTagName('img')[109].src;
+			img110.src = document.getElementsByTagName('img')[110].src;
+			img111.src = document.getElementsByTagName('img')[111].src;
+			img112.src = document.getElementsByTagName('img')[112].src;
+			img113.src = document.getElementsByTagName('img')[113].src;
+			img114.src = document.getElementsByTagName('img')[114].src;
+			img115.src = document.getElementsByTagName('img')[115].src;
+			img116.src = document.getElementsByTagName('img')[116].src;
+			img117.src = document.getElementsByTagName('img')[117].src;
+			img118.src = document.getElementsByTagName('img')[118].src;
+			img119.src = document.getElementsByTagName('img')[119].src;
+			img120.src = document.getElementsByTagName('img')[120].src;
+			img121.src = document.getElementsByTagName('img')[121].src;
+			img122.src = document.getElementsByTagName('img')[122].src;
+			img123.src = document.getElementsByTagName('img')[123].src;
+			img124.src = document.getElementsByTagName('img')[124].src;
+			img125.src = document.getElementsByTagName('img')[125].src;
+			img126.src = document.getElementsByTagName('img')[126].src;
+			img127.src = document.getElementsByTagName('img')[127].src;
+			img000.onload = function(){ctx.drawImage(img000, 0, 0, 8, 8);}
+			img001.onload = function(){ctx.drawImage(img001, 8, 0, 8, 8);}
+			img002.onload = function(){ctx.drawImage(img002, 16, 0, 8, 8);}
+			img003.onload = function(){ctx.drawImage(img003, 24, 0, 8, 8);}
+			img004.onload = function(){ctx.drawImage(img004, 32, 0, 8, 8);}
+			img005.onload = function(){ctx.drawImage(img005, 40, 0, 8, 8);}
+			img006.onload = function(){ctx.drawImage(img006, 48, 0, 8, 8);}
+			img007.onload = function(){ctx.drawImage(img007, 56, 0, 8, 8);}
+			img008.onload = function(){ctx.drawImage(img008, 64, 0, 8, 8);}
+			img009.onload = function(){ctx.drawImage(img009, 72, 0, 8, 8);}
+			img010.onload = function(){ctx.drawImage(img010, 80, 0, 8, 8);}
+			img011.onload = function(){ctx.drawImage(img011, 88, 0, 8, 8);}
+			img012.onload = function(){ctx.drawImage(img012, 96, 0, 8, 8);}
+			img013.onload = function(){ctx.drawImage(img013, 104, 0, 8, 8);}
+			img014.onload = function(){ctx.drawImage(img014, 112, 0, 8, 8);}
+			img015.onload = function(){ctx.drawImage(img015, 120, 0, 8, 8);}
+			img016.onload = function(){ctx.drawImage(img016, 0, 8, 8, 8);}
+			img017.onload = function(){ctx.drawImage(img017, 8, 8, 8, 8);}
+			img018.onload = function(){ctx.drawImage(img018, 16, 8, 8, 8);}
+			img019.onload = function(){ctx.drawImage(img019, 24, 8, 8, 8);}
+			img020.onload = function(){ctx.drawImage(img020, 32, 8, 8, 8);}
+			img021.onload = function(){ctx.drawImage(img021, 40, 8, 8, 8);}
+			img022.onload = function(){ctx.drawImage(img022, 48, 8, 8, 8);}
+			img023.onload = function(){ctx.drawImage(img023, 56, 8, 8, 8);}
+			img024.onload = function(){ctx.drawImage(img024, 64, 8, 8, 8);}
+			img025.onload = function(){ctx.drawImage(img025, 72, 8, 8, 8);}
+			img026.onload = function(){ctx.drawImage(img026, 80, 8, 8, 8);}
+			img027.onload = function(){ctx.drawImage(img027, 88, 8, 8, 8);}
+			img028.onload = function(){ctx.drawImage(img028, 96, 8, 8, 8);}
+			img029.onload = function(){ctx.drawImage(img029, 104, 8, 8, 8);}
+			img030.onload = function(){ctx.drawImage(img030, 112, 8, 8, 8);}
+			img031.onload = function(){ctx.drawImage(img031, 120, 8, 8, 8);}
+			img032.onload = function(){ctx.drawImage(img032, 0, 16, 8, 8);}
+			img033.onload = function(){ctx.drawImage(img033, 8, 16, 8, 8);}
+			img034.onload = function(){ctx.drawImage(img034, 16, 16, 8, 8);}
+			img035.onload = function(){ctx.drawImage(img035, 24, 16, 8, 8);}
+			img036.onload = function(){ctx.drawImage(img036, 32, 16, 8, 8);}
+			img037.onload = function(){ctx.drawImage(img037, 40, 16, 8, 8);}
+			img038.onload = function(){ctx.drawImage(img038, 48, 16, 8, 8);}
+			img039.onload = function(){ctx.drawImage(img039, 56, 16, 8, 8);}
+			img040.onload = function(){ctx.drawImage(img040, 64, 16, 8, 8);}
+			img041.onload = function(){ctx.drawImage(img041, 72, 16, 8, 8);}
+			img042.onload = function(){ctx.drawImage(img042, 80, 16, 8, 8);}
+			img043.onload = function(){ctx.drawImage(img043, 88, 16, 8, 8);}
+			img044.onload = function(){ctx.drawImage(img044, 96, 16, 8, 8);}
+			img045.onload = function(){ctx.drawImage(img045, 104, 16, 8, 8);}
+			img046.onload = function(){ctx.drawImage(img046, 112, 16, 8, 8);}
+			img047.onload = function(){ctx.drawImage(img047, 120, 16, 8, 8);}
+			img048.onload = function(){ctx.drawImage(img048, 0, 24, 8, 8);}
+			img049.onload = function(){ctx.drawImage(img049, 8, 24, 8, 8);}
+			img050.onload = function(){ctx.drawImage(img050, 16, 24, 8, 8);}
+			img051.onload = function(){ctx.drawImage(img051, 24, 24, 8, 8);}
+			img052.onload = function(){ctx.drawImage(img052, 32, 24, 8, 8);}
+			img053.onload = function(){ctx.drawImage(img053, 40, 24, 8, 8);}
+			img054.onload = function(){ctx.drawImage(img054, 48, 24, 8, 8);}
+			img055.onload = function(){ctx.drawImage(img055, 56, 24, 8, 8);}
+			img056.onload = function(){ctx.drawImage(img056, 64, 24, 8, 8);}
+			img057.onload = function(){ctx.drawImage(img057, 72, 24, 8, 8);}
+			img058.onload = function(){ctx.drawImage(img058, 80, 24, 8, 8);}
+			img059.onload = function(){ctx.drawImage(img059, 88, 24, 8, 8);}
+			img060.onload = function(){ctx.drawImage(img060, 96, 24, 8, 8);}
+			img061.onload = function(){ctx.drawImage(img061, 104, 24, 8, 8);}
+			img062.onload = function(){ctx.drawImage(img062, 112, 24, 8, 8);}
+			img063.onload = function(){ctx.drawImage(img063, 120, 24, 8, 8);}
+			img064.onload = function(){ctx.drawImage(img064, 0, 32, 8, 8);}
+			img065.onload = function(){ctx.drawImage(img065, 8, 32, 8, 8);}
+			img066.onload = function(){ctx.drawImage(img066, 16, 32, 8, 8);}
+			img067.onload = function(){ctx.drawImage(img067, 24, 32, 8, 8);}
+			img068.onload = function(){ctx.drawImage(img068, 32, 32, 8, 8);}
+			img069.onload = function(){ctx.drawImage(img069, 40, 32, 8, 8);}
+			img070.onload = function(){ctx.drawImage(img070, 48, 32, 8, 8);}
+			img071.onload = function(){ctx.drawImage(img071, 56, 32, 8, 8);}
+			img072.onload = function(){ctx.drawImage(img072, 64, 32, 8, 8);}
+			img073.onload = function(){ctx.drawImage(img073, 72, 32, 8, 8);}
+			img074.onload = function(){ctx.drawImage(img074, 80, 32, 8, 8);}
+			img075.onload = function(){ctx.drawImage(img075, 88, 32, 8, 8);}
+			img076.onload = function(){ctx.drawImage(img076, 96, 32, 8, 8);}
+			img077.onload = function(){ctx.drawImage(img077, 104, 32, 8, 8);}
+			img078.onload = function(){ctx.drawImage(img078, 112, 32, 8, 8);}
+			img079.onload = function(){ctx.drawImage(img079, 120, 32, 8, 8);}
+			img080.onload = function(){ctx.drawImage(img080, 0, 40, 8, 8);}
+			img081.onload = function(){ctx.drawImage(img081, 8, 40, 8, 8);}
+			img082.onload = function(){ctx.drawImage(img082, 16, 40, 8, 8);}
+			img083.onload = function(){ctx.drawImage(img083, 24, 40, 8, 8);}
+			img084.onload = function(){ctx.drawImage(img084, 32, 40, 8, 8);}
+			img085.onload = function(){ctx.drawImage(img085, 40, 40, 8, 8);}
+			img086.onload = function(){ctx.drawImage(img086, 48, 40, 8, 8);}
+			img087.onload = function(){ctx.drawImage(img087, 56, 40, 8, 8);}
+			img088.onload = function(){ctx.drawImage(img088, 64, 40, 8, 8);}
+			img089.onload = function(){ctx.drawImage(img089, 72, 40, 8, 8);}
+			img090.onload = function(){ctx.drawImage(img090, 80, 40, 8, 8);}
+			img091.onload = function(){ctx.drawImage(img091, 88, 40, 8, 8);}
+			img092.onload = function(){ctx.drawImage(img092, 96, 40, 8, 8);}
+			img093.onload = function(){ctx.drawImage(img093, 104, 40, 8, 8);}
+			img094.onload = function(){ctx.drawImage(img094, 112, 40, 8, 8);}
+			img095.onload = function(){ctx.drawImage(img095, 120, 40, 8, 8);}
+			img096.onload = function(){ctx.drawImage(img096, 0, 48, 8, 8);}
+			img097.onload = function(){ctx.drawImage(img097, 8, 48, 8, 8);}
+			img098.onload = function(){ctx.drawImage(img098, 16, 48, 8, 8);}
+			img099.onload = function(){ctx.drawImage(img099, 24, 48, 8, 8);}
+			img100.onload = function(){ctx.drawImage(img100, 32, 48, 8, 8);}
+			img101.onload = function(){ctx.drawImage(img101, 40, 48, 8, 8);}
+			img102.onload = function(){ctx.drawImage(img102, 48, 48, 8, 8);}
+			img103.onload = function(){ctx.drawImage(img103, 56, 48, 8, 8);}
+			img104.onload = function(){ctx.drawImage(img104, 64, 48, 8, 8);}
+			img105.onload = function(){ctx.drawImage(img105, 72, 48, 8, 8);}
+			img106.onload = function(){ctx.drawImage(img106, 80, 48, 8, 8);}
+			img107.onload = function(){ctx.drawImage(img107, 88, 48, 8, 8);}
+			img108.onload = function(){ctx.drawImage(img108, 96, 48, 8, 8);}
+			img109.onload = function(){ctx.drawImage(img109, 104, 48, 8, 8);}
+			img110.onload = function(){ctx.drawImage(img110, 112, 48, 8, 8);}
+			img111.onload = function(){ctx.drawImage(img111, 120, 48, 8, 8);}
+			img112.onload = function(){ctx.drawImage(img112, 0, 56, 8, 8);}
+			img113.onload = function(){ctx.drawImage(img113, 8, 56, 8, 8);}
+			img114.onload = function(){ctx.drawImage(img114, 16, 56, 8, 8);}
+			img115.onload = function(){ctx.drawImage(img115, 24, 56, 8, 8);}
+			img116.onload = function(){ctx.drawImage(img116, 32, 56, 8, 8);}
+			img117.onload = function(){ctx.drawImage(img117, 40, 56, 8, 8);}
+			img118.onload = function(){ctx.drawImage(img118, 48, 56, 8, 8);}
+			img119.onload = function(){ctx.drawImage(img119, 56, 56, 8, 8);}
+			img120.onload = function(){ctx.drawImage(img120, 64, 56, 8, 8);}
+			img121.onload = function(){ctx.drawImage(img121, 72, 56, 8, 8);}
+			img122.onload = function(){ctx.drawImage(img122, 80, 56, 8, 8);}
+			img123.onload = function(){ctx.drawImage(img123, 88, 56, 8, 8);}
+			img124.onload = function(){ctx.drawImage(img124, 96, 56, 8, 8);}
+			img125.onload = function(){ctx.drawImage(img125, 104, 56, 8, 8);}
+			img126.onload = function(){ctx.drawImage(img126, 112, 56, 8, 8);}
+			img127.onload = function(){ctx.drawImage(img127, 120, 56, 8, 8);}
+		}
+		draw();
+		</script>
+</body>
+</html>
