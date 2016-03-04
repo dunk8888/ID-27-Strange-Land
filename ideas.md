@@ -1,3 +1,4 @@
+##Strange Land
 *0 = empty & background / shadow left and top (tile is always on the right side & under forground tiles)
 *1-4 = background 
 *5-8 = background + shadow left (tile is always on the right side of a forground tile)
